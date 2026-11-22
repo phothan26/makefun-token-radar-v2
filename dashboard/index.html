@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TOKEN TIDE — The Momentum 758</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="masthead">
+  <div class="mast-title">
+    <h1>TOKEN TIDE <span class="sub">— The Momentum 758</span></h1>
+    <p class="tagline">Which pre-token protocol is worth farming next, ranked by how fast its TVL is moving — not how big it already is.</p>
+  </div>
+  <div class="mast-meta">
+    <div><span class="k">Snapshot</span><span class="v" id="asOf">—</span></div>
+    <div><span class="k">Tracked</span><span class="v" id="countTracked">—</span></div>
+    <div><span class="k">Watchlist</span><span class="v" id="countWatch">—</span></div>
+    <div><span class="k">Ranked</span><span class="v" id="countRanked">—</span></div>
+    <div class="topmover"><span class="k">Top mover</span><span class="v" id="topMover">—</span></div>
+  </div>
+</header>
+
+<section class="movers" aria-label="Top movers">
+  <h2>Top Movers <span class="hint">fastest 7d TVL growth on the board</span></h2>
+  <div class="mover-strip" id="moverStrip"></div>
+</section>
+
+<section class="filters" aria-label="Filters">
+  <label>Direction
+    <select id="fDir"><option value="all">All</option><option value="gainers">Gainers only</option><option value="losers">Losers only</option></select>
+  </label>
+  <label>Category <select id="fCat"><option value="">All categories</option></select></label>
+  <label>Chain <select id="fChain"><option value="">All chains</option></select></label>
+  <label class="check"><input type="checkbox" id="fWl"> Watchlist only</label>
+  <label class="search">Search <input type="search" id="fQ" placeholder="protocol name or slug"></label>
+  <span class="count" id="rowCount"></span>
+</section>
+
+<section class="detail" id="detail" hidden>
+  <button class="close" id="detailClose" type="button">Close ×</button>
+  <h2 id="dName">—</h2>
+  <p class="d-sub" id="dSub">—</p>
+  <div class="d-metrics" id="dMetrics"></div>
+  <h3>Momentum breakdown</h3>
+  <table class="factors" id="dFactors"></table>
+  <p class="why" id="dWhy"></p>
+  <h3>Farm plan — momentum farming, time-boxed</h3>
+  <ol class="farm" id="dFarm"></ol>
+</section>
+
+<main>
+  <table class="board" id="board">
+    <thead><tr>
+      <th data-sort="rank">Rank</th><th data-sort="name">Protocol</th><th data-sort="category">Category</th>
+      <th data-sort="chains">Chains</th><th data-sort="tvl">TVL</th><th data-sort="change">7d change</th>
+      <th data-sort="score">Momentum</th><th data-sort="value">Implied value</th><th>Farm teaser</th>
+    </tr></thead>
+    <tbody id="boardBody"></tbody>
+  </table>
+</main>
+
+<section class="charts">
+  <div class="chart"><h2>Where the tide is moving</h2><p class="hint">7d-change distribution across the 250 ranked protocols (clamped to −50%…+100%).</p><div id="hist"></div></div>
+  <div class="chart"><h2>Momentum vs size</h2><p class="hint">Each dot is a ranked protocol. Size does not buy rank here — the top-right is empty on purpose.</p><div id="scatter"></div></div>
+</section>
+
+<section class="method">
+  <h2>Methodology — how the tide is measured</h2>
+  <p>Every number on this page is derived from the sealed snapshot's own figures (TVL, 7d change, listing date, category, chains, token record). Nothing is hand-kept: no protocol list, no per-protocol text, no outside data.</p>
+  <ol>
+    <li><b>Velocity</b> — the 7d TVL change, clamped to −40%…+60% and divided by 30, so one wild week cannot dominate. A +60% week scores 2.00; a −40% week scores −1.33.</li>
+    <li><b>Trend persistence</b> — a young protocol (listed under a year ago) growing fast is a breakout (+1.00); an old one growing fast is a confirmed trend (+0.40). A young protocol flat or falling is unproven (−0.80 young, −0.10 old).</li>
+    <li><b>Category momentum</b> — a multiplier from the category's own median 7d change in the snapshot: 1 + clamp(median ÷ 50, −0.40, +0.60). Heating categories lift their members; cooling ones drag them down.</li>
+    <li><b>Core cap</b> — (velocity + trend) × category multiplier is capped at 3.00, so no single week can run away with the board.</li>
+    <li><b>Scale gate</b> — log TVL, weak weight: 2.00 × clamp((log10 TVL − log10 $5M) ÷ (log10 $100M − log10 $5M), 0, 1). It keeps the board grounded in real money; a tiny base doubling from $5M does not beat a real $500M protocol growing 20%.</li>
+    <li><b>Chain momentum</b> — +0.08 per extra chain, up to +0.40. More chains means more places the tide can come in.</li>
+    <li><b>No-token bonus</b> — +0.80 when the snapshot records no token at all (no market cap, no CoinGecko id, no symbol). Those are the farmable set.</li>
+  </ol>
+  <p><b>Implied value</b> maps the momentum score to dollars monotonically on a log scale, anchored on this board's own score range: the top row lands near $850M, the bottom near $2M. It is the radar's own claim about what the momentum is worth, never a market price.</p>
+  <p><b>Farm plans</b> are generated from each protocol's own fields — its category, its chains, its 7d change, its scale, its age, its watchlist status — by fixed rules. Momentum farming is time-boxed: enter while the tide rises, re-check weekly, and exit on two negative weeks.</p>
+  <p class="note">“No token recorded” means the snapshot records no token for the protocol. It is not proof that the protocol has none, and a token, if one ever comes, is not guaranteed.</p>
+</section>
+
+<footer><p>TOKEN TIDE — The Momentum 758 · Built from the sealed snapshot of 758 pre-token protocols · Rankings are the radar's own model, not investment advice.</p></footer>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
